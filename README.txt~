@@ -1,0 +1,12 @@
+Corey Finley
+1 October 2013
+
+To compile gasket-linux.cpp, run the makefile
+
+make
+
+the executable will be named Gasket, to run the executable 
+
+./Gasket <f> <m>
+
+f and m, are the rotation factor and the subdivisions respectivly.
