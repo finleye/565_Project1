@@ -1,12 +1,12 @@
 # Corey Finley                               
-# 1 October 2013                             
+# 7 October 2013                             
 # Addapted from makefile supplied on dropbox.                                   
 
 #Specifies the files we will be compiling
-COMPILING = gasket-linux.cpp
+COMPILING = teapot.cpp
 
 #Specifies the executable's name
-EXECUTABLE = Gasket
+EXECUTABLE = Teapot
 
 #Specifies the compilier we will be using
 CC = g++

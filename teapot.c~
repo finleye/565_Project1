@@ -1,0 +1,55 @@
+/* Corey Finley                               */
+/* 7 October 2013                             */
+
+/* Interactive viewing of two 3D teapots      */
+
+#include <stdlib.h>
+#include <math.h>
+#include <GL/glut.h> 
+
+void drawTeapot(){
+	glutSolidTeapot(1.0);
+	glTranslatef(10.0,10.0,0.0);
+  	glutSolidTeapot(1.0);
+}
+
+
+
+void myinit()
+{
+
+/* attributes */
+
+      glClearColor(0.0, 0.0, 0.0, 1.0); /* white background */
+      glColor3f(1.0, 0.0, 0.0); /* draw in red */
+
+/* set up viewing */
+/* 50.0 x 50.0 camera coordinate window with origin lower left */
+
+      glMatrixMode(GL_PROJECTION);
+      glLoadIdentity();
+      //gluOrtho2D(0.0, 50.0, 0.0, 50.0);
+	  gluPerspective(60, 1, 1, 1000);
+      glMatrixMode(GL_MODELVIEW);
+}
+
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);  /*clear the window */
+    drawTeapots();
+    glutSwapBuffers();
+ }
+
+int main(int argc, char* argv[])
+{
+	/* standard GLUT initialization */
+    glutInit(&argc,argv);
+    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB); /* default, not needed */
+    glutInitWindowSize(600,600); /* 500 x 500 pixel window */
+    glutInitWindowPosition(0,0); /* place window top left on display */
+    glutCreateWindow("Teapot Display"); /* window title */
+    glutDisplayFunc(display);
+              /* display callback invoked when window opened */
+    myinit(); /* set attributes */
+    glutMainLoop(); /* enter event loop */
+}

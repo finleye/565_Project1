@@ -26,7 +26,7 @@ void myinit()
 
 /* attributes */
 
-      glClearColor(1.0, 1.0, 1.0, 1.0); /* white background */
+      glClearColor(0.0, 0.0, 0.0, 1.0); /* white background */
       glColor3f(1.0, 0.0, 0.0); /* draw in red */
 
 /* set up viewing */
@@ -84,8 +84,7 @@ void display()
 
 int main(int argc, char* argv[])
 {
-/* standard GLUT initialization */
-
+	/* standard GLUT initialization */
     glutInit(&argc,argv);
     glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB); /* default, not needed */
     glutInitWindowSize(600,600); /* 500 x 500 pixel window */

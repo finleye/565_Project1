@@ -3,7 +3,7 @@
 # Addapted from makefile supplied on dropbox.                                   
 
 #Specifies the files we will be compiling
-COMPILING = teapot.cpp
+COMPILING = teapot.c
 
 #Specifies the executable's name
 EXECUTABLE = Teapot
