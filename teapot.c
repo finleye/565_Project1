@@ -8,9 +8,9 @@
 #include <GL/gl.h>
 
 void drawTeapots(){
-  glTranslatef(2.0,2.0,0.0);
+  glTranslatef(-2.0,0.0,-2.5);
 	glutSolidTeapot(1.0);
-	glTranslatef(2.0,0.0,0);
+	glTranslatef(4.0,0.0,0);
   glutSolidTeapot(1.0);
 }
 
@@ -18,8 +18,7 @@ void init()
 {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(0.0, 5.0, 0.0, 5.0, 0.0, 5.0);
-  //gluPerspective(60, 1, 1, 1000);
+  glOrtho(-5.0, 5.0, -5.0, 5.0, 0.0, 5.0); // bounding volume for the projection
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   
