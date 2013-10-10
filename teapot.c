@@ -11,8 +11,8 @@ int  l_click = GLUT_UP;
 int  r_click = GLUT_UP;
 
 int start_x1, start_y1, start_x2, start_y2;
-double theta1, theta2, mouse_delta;
-
+double theta_x1, theta_y1, mouse_delta_x1, mouse_delta_y1;
+double theta_x2, theta_y2, mouse_delta_x2, mouse_delta_y2;
 double HEIGHT = 500;
 double WIDTH = 500;
 
@@ -24,6 +24,7 @@ void teapot1(){
       diffusive (0.07568, 0.61424, 0.07568, 1.0), 
       specular (0.633, 0.727811, 0.633, 1.0), 
       shininess=0.6 */
+  glLoadIdentity();
 
   GLfloat amb[]={0.0215, 0.1745, 0.0215, 1.0};
   GLfloat diff[]={0.07568, 0.61424, 0.07568, 1.0};
@@ -35,9 +36,9 @@ void teapot1(){
   glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,  spec);
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shine);
 
-  glLoadIdentity();
   glTranslatef(-2.0,0.0,-2.5);
-  glRotatef(theta1, 0, 1, 0);
+  glRotatef(theta_x1, 0, 1, 0);
+  glRotatef(theta_y1, 1, 0, 0);
   glutSolidTeapot(1.0);
 }
 
@@ -62,7 +63,8 @@ void teapot2(){
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shine);
 
   glTranslatef(2.0,0.0,-2.5);
-  glRotatef(theta2, 0, 1, 0);
+  glRotatef(theta_x2, 0, 1, 0);
+  glRotatef(theta_y2, 1, 0, 0);
   glutSolidTeapot(1.0);
 }
 
@@ -136,13 +138,17 @@ void mouseClick(int button, int state, int x, int y){
 // interprate mouse motion
 void mouseMotion(int x, int y){
   if(l_click == GLUT_DOWN){
-    mouse_delta = sqrt(pow((x-start_x1), 2) + pow((y-start_y1),2));
-    theta1 = theta1+(360*mouse_delta/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
+    mouse_delta_x1 = (x-start_x1)/2.f;
+    mouse_delta_y1 = (y-start_y1)/2.f;
+    theta_x1 = (360*mouse_delta_x1/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
+    theta_y1 = (360*mouse_delta_y1/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
     glutPostRedisplay();
   }
   if(r_click == GLUT_DOWN){
-    mouse_delta = sqrt(pow((x-start_x2), 2) + pow((y-start_y2),2));
-    theta2 = theta2+(360*mouse_delta/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
+    mouse_delta_x2 = (x-start_x2)/2.f;
+    mouse_delta_y2 = (y-start_y2)/2.f;
+    theta_x2 = (360*mouse_delta_x2/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
+    theta_y2 = (360*mouse_delta_y2/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
     glutPostRedisplay();
   }
 }
