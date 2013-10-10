@@ -17,13 +17,15 @@ double HEIGHT = 500;
 double WIDTH = 500;
 
 void teapot1(){
-  /* Size=1.0, Location: (-2.0, 0.0, -2.5)
+  /* Attributes for Teapot 1 
+   * Size=1.0, Location: (-2.0, 0.0, -2.5)
+   * Material 
+   *  ambience (0.0215, 0.1745, 0.0215, 1.0), 
+   *  diffusive (0.07568, 0.61424, 0.07568, 1.0), 
+   *  specular (0.633, 0.727811, 0.633, 1.0), 
+   *  shininess=0.6
+   */
 
-     Material – 
-      ambience (0.0215, 0.1745, 0.0215, 1.0), 
-      diffusive (0.07568, 0.61424, 0.07568, 1.0), 
-      specular (0.633, 0.727811, 0.633, 1.0), 
-      shininess=0.6 */
   glLoadIdentity();
 
   GLfloat amb[]={0.0215, 0.1745, 0.0215, 1.0};
@@ -43,13 +45,14 @@ void teapot1(){
 }
 
 void teapot2(){
-  /* Size=1.0, Location: (2.0, 0.0, -2.5)
-
-     Material – 
-      ambience (0.2125, 0.1275, 0.054, 1.0), 
-      diffusive (0.714, 0.4284, 0.18144, 1.0), 
-      specular (0.393548, 0.271906, 0.166721, 1.0), 
-      shininess=0.2 */
+  /* Attributes for Teapot 2
+   * Size=1.0, Location: (2.0, 0.0, -2.5)
+   * Material
+   *  ambience (0.2125, 0.1275, 0.054, 1.0), 
+   *  diffusive (0.714, 0.4284, 0.18144, 1.0), 
+   *  specular (0.393548, 0.271906, 0.166721, 1.0), 
+   *  shininess=0.2
+   */
   glLoadIdentity();
 
   GLfloat amb[] ={0.2125,   0.1275,   0.054,    1.0};
@@ -96,33 +99,42 @@ void setLighting(){
 
 void init()
 {
-  glClearColor (0.0,0.0,0.0,1.0);
+  glClearColor (0.0,0.0,0.0,1.0); // set background to black
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glOrtho(-5.0, 5.0, -5.0, 5.0, 0.0, 5.0); // bounding volume for the projection
   glMatrixMode(GL_MODELVIEW);
-  
-  glEnable(GL_DEPTH_TEST);    // enable hidden surface removal
-
-  setLighting();
+  glEnable(GL_DEPTH_TEST); // enable hidden surface removal
+  setLighting(); // call method to set the lighting effects
 }
 
 /* Callbacks */
-// display frame
+
+/* display frame */
 void display(){
-  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-  teapot1(); //draw teapot1
-  teapot2(); //draw teapot2
-  glutSwapBuffers();
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT); // clear the color buffer and the depth buffer
+  teapot1(); // draw teapot1
+  teapot2(); // draw teapot2
+  glutSwapBuffers(); // swap buffers in the double buffer
 }
 
-// interprate keyboard functions
+/* interprate keyboard functions */
 void keyboard(unsigned char key, int x, int y){
+  if('l' == key || 'L' == key){
+    exit(0);
+  }
+  if('r' == key || 'R' == key){
+    exit(0);
+  }
 }
 
-// interprate mouse clicks
+/* interprate mouse clicks */
 void mouseClick(int button, int state, int x, int y){
+  /* Get starting x and starting y for distance change calculation
+   * Set the click state for mouseMotion
+   */
+
   if(GLUT_LEFT_BUTTON == button){
     start_x1 = x;
     start_y1 = y;
@@ -135,21 +147,28 @@ void mouseClick(int button, int state, int x, int y){
   }
 }
 
-// interprate mouse motion
+/* interprate mouse motion */
 void mouseMotion(int x, int y){
+  /* For both right and left click, first measure change in x, and
+   * change in y, for teapot1 and teapot2 respectively.
+   * Then use those detla values to calculate rotation amount for 
+   * the x and y axis independently.
+   * Then repost the display
+   */
+
   if(l_click == GLUT_DOWN){
-    mouse_delta_x1 = (x-start_x1)/2.f;
-    mouse_delta_y1 = (y-start_y1)/2.f;
-    theta_x1 = (360*mouse_delta_x1/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
-    theta_y1 = (360*mouse_delta_y1/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
-    glutPostRedisplay();
+    mouse_delta_x1 = (x-start_x1)/2.f; // Change in x
+    mouse_delta_y1 = (y-start_y1)/2.f; // Change in y
+    theta_x1 = (360*mouse_delta_x1/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH)); // amount of rotation for x axis
+    theta_y1 = (360*mouse_delta_y1/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH)); // amount of rotation for y axis
+    glutPostRedisplay(); // call the display method again
   }
   if(r_click == GLUT_DOWN){
-    mouse_delta_x2 = (x-start_x2)/2.f;
-    mouse_delta_y2 = (y-start_y2)/2.f;
-    theta_x2 = (360*mouse_delta_x2/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
-    theta_y2 = (360*mouse_delta_y2/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
-    glutPostRedisplay();
+    mouse_delta_x2 = (x-start_x2)/2.f; // Change in x
+    mouse_delta_y2 = (y-start_y2)/2.f; // Change in y
+    theta_x2 = (360*mouse_delta_x2/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH)); // amount of rotation for x axis
+    theta_y2 = (360*mouse_delta_y2/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH)); // amount of rotation for y axis
+    glutPostRedisplay(); // call the display method again
   }
 }
 
@@ -160,18 +179,17 @@ int main(int argc, char* argv[])
 {
 	/* standard GLUT initialization */
     glutInit(&argc,argv);
-    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB); /* default, not needed */
-    glutInitWindowSize(HEIGHT,WIDTH); /* 500 x 500 pixel window */
-    glutInitWindowPosition(0,0); /* place window top left on display */
-    glutCreateWindow("Teapot Display"); /* window title */
+    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB); // use double buffer to prevent flicker
+    glutInitWindowSize(HEIGHT,WIDTH); // set window with globals
+    glutInitWindowPosition(100,100);
+    glutCreateWindow("Teapot Display"); // window title
 
-    init(); /* set attributes */
+    init(); // set attributes
 
-    /* Call Backs */
+    /* Callbacks */
     glutDisplayFunc(display);
-    glutIdleFunc(display);
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouseClick);
     glutMotionFunc(mouseMotion);
-    glutMainLoop(); /* enter event loop */
+    glutMainLoop(); // start event loop
 }
