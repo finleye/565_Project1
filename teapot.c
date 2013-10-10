@@ -7,8 +7,14 @@
 #include <GL/glut.h> 
 #include <GL/gl.h>
 
-static int  l_click = GLUT_UP;
-static int  r_click = GLUT_UP;
+int  l_click = GLUT_UP;
+int  r_click = GLUT_UP;
+
+int start_x1, start_y1, start_x2, start_y2;
+double theta1, theta2, mouse_delta;
+
+double HEIGHT = 500;
+double WIDTH = 500;
 
 void teapot1(){
   /* Size=1.0, Location: (-2.0, 0.0, -2.5)
@@ -31,6 +37,7 @@ void teapot1(){
 
   glLoadIdentity();
   glTranslatef(-2.0,0.0,-2.5);
+  glRotatef(theta1, 0, 1, 0);
   glutSolidTeapot(1.0);
 }
 
@@ -44,8 +51,8 @@ void teapot2(){
       shininess=0.2 */
   glLoadIdentity();
 
-  GLfloat amb[]={0.2125, 0.1275, 0.054, 1.0};
-  GLfloat diff[]={0.714, 0.4284, 0.18144, 1.0};
+  GLfloat amb[] ={0.2125,   0.1275,   0.054,    1.0};
+  GLfloat diff[]={0.714,    0.4284,   0.18144,  1.0};
   GLfloat spec[]={0.393548, 0.271906, 0.166721, 1.0};
   GLfloat shine[]={0.2};
 
@@ -55,24 +62,8 @@ void teapot2(){
   glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, shine);
 
   glTranslatef(2.0,0.0,-2.5);
+  glRotatef(theta2, 0, 1, 0);
   glutSolidTeapot(1.0);
-}
-
-void init()
-{
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(-5.0, 5.0, -5.0, 5.0, 0.0, 5.0); // bounding volume for the projection
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  
-  glEnable(GL_DEPTH_TEST);    // enable hidden surface removal
-
-  glEnable(GL_LIGHTING);
-  glEnable(GL_LIGHT0);
-
-  // glShadeModel(GL_FLAT);   // flat shading
-  // glShadeModel(GL_SMOOTH);    // smooth shading
 }
 
 void setLighting(){
@@ -85,30 +76,40 @@ void setLighting(){
   GLfloat lmodel_ambient[] = {0.2, 0.2, 0.2, 1.0};
   GLfloat local_view[] = {0.0};
 
+  glEnable(GL_LIGHTING);
+  glEnable(GL_LIGHT0);
+
   glLightfv(GL_LIGHT0, GL_POSITION, position);
   glLightfv(GL_LIGHT0, GL_AMBIENT, amb);
   glLightfv(GL_LIGHT0, GL_DIFFUSE, dif);
   glLightfv(GL_LIGHT0, GL_SPECULAR, spc);
   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
   glLightModelfv(GL_LIGHT_MODEL_LOCAL_VIEWER, local_view);
-}
 
-/* Callbacks */
-// display frame
-void display()
-{
-  glClearColor (0.0,0.0,0.0,1.0);
-  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-  // From assignment description for lighting
-  setLighting();
-
-  //set eye
   gluLookAt(         // Eye
     0.0, 0.0, 0.0,   // Location
     0.0, 0.0, -1.0,  // Direction
     0.0, 1.0, 0.0);  // Up Direction
+}
 
+void init()
+{
+  glClearColor (0.0,0.0,0.0,1.0);
+
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glOrtho(-5.0, 5.0, -5.0, 5.0, 0.0, 5.0); // bounding volume for the projection
+  glMatrixMode(GL_MODELVIEW);
+  
+  glEnable(GL_DEPTH_TEST);    // enable hidden surface removal
+
+  setLighting();
+}
+
+/* Callbacks */
+// display frame
+void display(){
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
   teapot1(); //draw teapot1
   teapot2(); //draw teapot2
   glutSwapBuffers();
@@ -120,12 +121,30 @@ void keyboard(unsigned char key, int x, int y){
 
 // interprate mouse clicks
 void mouseClick(int button, int state, int x, int y){
-
+  if(GLUT_LEFT_BUTTON == button){
+    start_x1 = x;
+    start_y1 = y;
+    l_click = state;
+  }
+  if(GLUT_RIGHT_BUTTON == button){
+    start_x2 = x;
+    start_y2 = y;
+    r_click = state;
+  }
 }
 
 // interprate mouse motion
 void mouseMotion(int x, int y){
-
+  if(l_click == GLUT_DOWN){
+    mouse_delta = sqrt(pow((x-start_x1), 2) + pow((y-start_y1),2));
+    theta1 = theta1+(360*mouse_delta/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
+    glutPostRedisplay();
+  }
+  if(r_click == GLUT_DOWN){
+    mouse_delta = sqrt(pow((x-start_x2), 2) + pow((y-start_y2),2));
+    theta2 = theta2+(360*mouse_delta/sqrt(HEIGHT*HEIGHT+WIDTH*WIDTH));
+    glutPostRedisplay();
+  }
 }
 
 
@@ -136,7 +155,7 @@ int main(int argc, char* argv[])
 	/* standard GLUT initialization */
     glutInit(&argc,argv);
     glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB); /* default, not needed */
-    glutInitWindowSize(600,600); /* 500 x 500 pixel window */
+    glutInitWindowSize(HEIGHT,WIDTH); /* 500 x 500 pixel window */
     glutInitWindowPosition(0,0); /* place window top left on display */
     glutCreateWindow("Teapot Display"); /* window title */
 
