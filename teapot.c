@@ -7,10 +7,13 @@
 #include <GL/glut.h> 
 #include <GL/gl.h>
 
-void drawTeapots(){
+void teapot1(){
   glTranslatef(-2.0,0.0,-2.5);
-	glutSolidTeapot(1.0);
-	glTranslatef(4.0,0.0,0);
+  glutSolidTeapot(1.0);
+}
+
+void teapot2(){
+  glTranslatef(4.0,0.0,0);
   glutSolidTeapot(1.0);
 }
 
@@ -22,7 +25,6 @@ void init()
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   
-
   glEnable(GL_DEPTH_TEST);    // enable hidden surface removal
 
   glEnable(GL_LIGHTING);
@@ -32,13 +34,8 @@ void init()
   glShadeModel(GL_SMOOTH);    // smooth shading
 }
 
-void display()
-{
-  glClearColor (0.0,0.0,0.0,1.0);
-  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-  glLoadIdentity();
-  // From assignment description for lighting
+void setLighting(){
+  // lighting from assignment
   GLfloat position[]={.0, 3.0, -3.0, 1.0};
   GLfloat amb[]={1.0, 1.0, 1.0, 1.0};
   GLfloat dif[]={1.0, 1.0, 1.0, 1.0};
@@ -52,13 +49,24 @@ void display()
   glLightfv(GL_LIGHT0, GL_SPECULAR, spc);
   glLightModelfv(GL_LIGHT_MODEL_AMBIENT, lmodel_ambient);
   glLightModelfv(GL_LIGHT_MODEL_LOCAL_VIEWER, local_view);
+}
 
-  gluLookAt(        // Eye
-    0.0, 0.0, 0.0,  // Location
-    0.0, 0.0, -1.0, // Direction
+void display()
+{
+  glClearColor (0.0,0.0,0.0,1.0);
+  glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+
+  glLoadIdentity();
+  // From assignment description for lighting
+  setLighting();
+
+  gluLookAt(         // Eye
+    0.0, 0.0, 0.0,   // Location
+    0.0, 0.0, -1.0,  // Direction
     0.0, 1.0, 0.0);  // Up Direction
 
-  drawTeapots();
+  teapot1(); //draw teapot1
+  teapot2(); //draw teapot2
   glutSwapBuffers();
  }
 
