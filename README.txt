@@ -1,7 +1,7 @@
 Corey Finley
 7 October 2013
 
-To compile gasket-linux.cpp, run the makefile
+To compile teapot.c, run the makefile
 
 make
 
